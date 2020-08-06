@@ -276,6 +276,7 @@
     width: 245px;
     font-size: 16px;
     justify-content: center;
+    outline: none;
   }
 
   .teacher-item footer button img{
