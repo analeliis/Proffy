@@ -1,19 +1,75 @@
+const proffys = [
+  {
+    name: "Diego Fernandes",
+    avatar:
+      "https://avatars2.githubusercontent.com/u/2254731?s=460&amp;u=0ba16a79456c2f250e7579cb388fa18c5c2d7d65&amp;v=4",
+    whatsapp: "89996542132",
+    bio:
+      "Entusiasta das melhores tecnologias de química avançada.<br><br>Apaixonado por explodir coisas em laboratório e por mudar a vida das pessoas através de experiências. Mais de 200.000 pessoas já passaram por uma das minhas explosões.",
+    subject: "Química",
+    cost: "20",
+    weekday: [0],
+    time_from: [720],
+    time_to: [1220],
+  },
+
+  {
+    name: "Daniele Evangelista",
+    avatar:
+      "https://avatars2.githubusercontent.com/u/2254731?s=460&amp;u=0ba16a79456c2f250e7579cb388fa18c5c2d7d65&amp;v=4",
+    whatsapp: "89996542132",
+    bio:
+      "Entusiasta das melhores tecnologias de química avançada.<br><br>Apaixonado por explodir coisas em laboratório e por mudar a vida das pessoas através de experiências. Mais de 200.000 pessoas já passaram por uma das minhas explosões.",
+    subject: "Química",
+    cost: "20",
+    weekday: [1],
+    time_from: [720],
+    time_to: [1220],
+  },
+  {
+    name: "Ana Clara Lélis",
+    avatar:
+      "https://avatars2.githubusercontent.com/u/59521797?s=460&u=ca576fd83d81b8b853e2d626e70c840922671f59&v=4",
+    whatsapp: "89996542132",
+    bio:
+      "Entusiasta das melhores tecnologias de química avançada.<br><br>Apaixonado por explodir coisas em laboratório e por mudar a vida das pessoas através de experiências. Mais de 200.000 pessoas já passaram por uma das minhas explosões.",
+    subject: "Química",
+    cost: "20",
+    weekday: [2],
+    time_from: [720],
+    time_to: [1220],
+  }
+];
+
+function pageLanding(req, res) {
+  return res.render("index.html");
+}
+
+function pageStudy(req, res) {
+  return res.render("study.html",{proffys});
+}
+
+function pageGiveClasses(req, res) {
+  return res.render("give-classes.html");
+}
+
 //importando o express criando um servidor
-const express = require('express');
+const express = require("express");
 const server = express();
 
-//arquivos estaticos css,html
-server.use(express.static("public"))
-.get("/", (req,res) => {
-  return res.sendFile(__dirname + "/views/index.html")
+
+//configurar nunjucks
+const nunjucks = require("nunjucks"); //importar o nunjucks
+nunjucks.configure('src/views',{
+  express: server, //mostrando o servidor
+  noCache: true, //não possui cache armazenamento
 })
 
-.get("/study", (req,res) => {
-  return res.sendFile(__dirname + "/views/study.html")
-})
-
-.get("/give-classes", (req,res) => {
-  return res.sendFile(__dirname + "/views/give-classes.html")
-}) 
-
-.listen(5500);
+server
+  //configurar arquivos estáticos (css,scripts,imagens)
+  .use(express.static("public"))
+  //rotas da aplicação
+  .get("/", pageLanding)
+  .get("/study", pageStudy)
+  .get("/give-classes", pageGiveClasses)
+  .listen(5500);
