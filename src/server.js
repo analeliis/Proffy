@@ -1,3 +1,4 @@
+//DADOS
 const proffys = [
   {
     name: "Diego Fernandes",
@@ -38,33 +39,77 @@ const proffys = [
     weekday: [2],
     time_from: [720],
     time_to: [1220],
-  }
+  },
 ];
+
+const subjects = [
+  "Artes",
+  "Biologia",
+  "Ciências",
+  "Educação física",
+  "Física",
+  "Geografia",
+  "História",
+  "Matemática",
+  "Português",
+  "Química",
+];
+
+const weekdays = [
+  "Domingo",
+  "Segunda-feira",
+  "Terça-feira",
+  "Quarta-feira",
+  "Quinta-feira",
+  "Sexta-feira",
+  "Sábado",
+];
+
+function getSubject(subjectNumber){
+  const position = +subjectNumber - 1
+  return subjects[position]
+}
 
 function pageLanding(req, res) {
   return res.render("index.html");
 }
 
 function pageStudy(req, res) {
-  return res.render("study.html",{proffys});
+  const filters = req.query; //pega os valores da requisição
+
+  return res.render("study.html", { proffys, filters, subjects, weekdays });
 }
 
 function pageGiveClasses(req, res) {
-  return res.render("give-classes.html");
+  const data = req.query;
+
+  //se houver data
+  const isNotEmpty = Object.keys(data).length > 0
+  if (isNotEmpty) {
+
+    data.subject = getSubject(data.subject)
+    //adicionar data ao a lista de proffys
+    proffys.push(data);
+
+    return res.redirect("/study");
+  }
+
+  //se não, mostrar a página
+  return res.render("give-classes.html", { subjects, weekdays });
 }
 
 //importando o express criando um servidor
 const express = require("express");
 const server = express();
 
-
 //configurar nunjucks
 const nunjucks = require("nunjucks"); //importar o nunjucks
-nunjucks.configure('src/views',{
+nunjucks.configure("src/views", {
   express: server, //mostrando o servidor
   noCache: true, //não possui cache armazenamento
-})
+});
 
+//Inicio e configuração do servidor
 server
   //configurar arquivos estáticos (css,scripts,imagens)
   .use(express.static("public"))
@@ -72,4 +117,5 @@ server
   .get("/", pageLanding)
   .get("/study", pageStudy)
   .get("/give-classes", pageGiveClasses)
+  //star do servidor
   .listen(5500);
